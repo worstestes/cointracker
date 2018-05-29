@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test');
+mongoose.connect('mongodb://localhost/watchedCoins');
 
 var db = mongoose.connection;
 
@@ -9,23 +9,25 @@ db.on('error', function() {
 
 db.once('open', function() {
   console.log('mongoose connected successfully');
+  console.log(Coin);
 });
 
-var itemSchema = mongoose.Schema({
-  quantity: Number,
-  description: String
+var coinSchema = mongoose.Schema({
+  name: {type: String, index: {unique: true}},
+  symbol: String
 });
 
-var Item = mongoose.model('Item', itemSchema);
+var Coin = mongoose.model('Coin', coinSchema);
 
 var selectAll = function(callback) {
-  Item.find({}, function(err, items) {
+  Coin.find({}, function(err, coins) {
     if(err) {
       callback(err, null);
     } else {
-      callback(null, items);
+      callback(null, coins);
     }
   });
 };
 
+module.exports = Coin;
 module.exports.selectAll = selectAll;

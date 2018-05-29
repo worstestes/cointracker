@@ -1,26 +1,25 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 // UNCOMMENT THE DATABASE YOU'D LIKE TO USE
-// var items = require('../database-mysql');
-// var items = require('../database-mongo');
+var items = require('../database-mongo');
+let Coin = require('../database-mongo');
+
 
 var app = express();
+app.use(bodyParser.json()); // support json encoded bodies
+ 
+app.use(express.static(__dirname + '/../react-client/dist'));
 
-// UNCOMMENT FOR REACT
-// app.use(express.static(__dirname + '/../react-client/dist'));
 
-// UNCOMMENT FOR ANGULAR
-// app.use(express.static(__dirname + '/../angular-client'));
-// app.use(express.static(__dirname + '/../node_modules'));
+app.post('/coins', function (req, res) {
+  console.log(JSON.parse(req.body.data));
+  let watchedCoin = JSON.parse(req.body.data);
+  let savedWatchedCoin = new Coin(watchedCoin);
 
-app.get('/items', function (req, res) {
-  items.selectAll(function(err, data) {
-    if(err) {
-      res.sendStatus(500);
-    } else {
-      res.json(data);
-    }
-  });
+  savedWatchedCoin.save(function (err, object) {
+    if(err) return console.error(err);
+    console.log(object);
+  })
 });
 
 app.listen(3000, function() {
