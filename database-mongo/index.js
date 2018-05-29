@@ -14,7 +14,8 @@ db.once('open', function() {
 
 var coinSchema = mongoose.Schema({
   name: {type: String, index: {unique: true}},
-  symbol: String
+  symbol: String,
+  rank: Number,
 });
 
 var Coin = mongoose.model('Coin', coinSchema);
